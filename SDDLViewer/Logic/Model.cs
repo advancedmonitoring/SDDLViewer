@@ -309,7 +309,16 @@ namespace SDDLViewer.Logic
             var localSb = new StringBuilder();
             localSb.AppendLine(path);
             _currentFiles++;
-            localSb.AppendLine(Directory.GetAccessControl(path).GetSecurityDescriptorSddlForm(AccessControlSections.All));
+            var sddlString = "Unable obtain SDDL";
+            try
+            {
+                sddlString = Directory.GetAccessControl(path).GetSecurityDescriptorSddlForm(AccessControlSections.All);
+            }
+            catch
+            {
+                // ignore
+            }
+            localSb.AppendLine(sddlString);
             _sb.AppendLine(localSb.ToString());
             foreach (var dir in DirectorySearcher.MyGetDirectories(path))
             {
@@ -376,8 +385,16 @@ namespace SDDLViewer.Logic
                             continue;
                         var localSb = new StringBuilder();
                         localSb.AppendLine($"{file}");
-                        var cd = File.GetAccessControl(file);
-                        localSb.AppendLine(cd.GetSecurityDescriptorSddlForm(AccessControlSections.All));
+                        var sddlString = "Unable obtain SDDL";
+                        try
+                        {
+                            sddlString = File.GetAccessControl(file).GetSecurityDescriptorSddlForm(AccessControlSections.All);
+                        }
+                        catch
+                        {
+                            // ignore
+                        }
+                        localSb.AppendLine(sddlString);
                         sb.AppendLine(localSb.ToString());
                     }
                     catch
@@ -456,7 +473,16 @@ namespace SDDLViewer.Logic
             var localSb = new StringBuilder();
             localSb.AppendLine(key.Name);
             _currentFiles++;
-            localSb.AppendLine(key.GetAccessControl().GetSecurityDescriptorSddlForm(AccessControlSections.All));
+            var sddlString = "Unable obtain SDDL";
+            try
+            {
+                sddlString = key.GetAccessControl().GetSecurityDescriptorSddlForm(AccessControlSections.All);
+            }
+            catch
+            {
+                // ignore
+            }
+            localSb.AppendLine(sddlString);
             _sb.AppendLine(localSb.ToString());
             if (key.SubKeyCount != 0)
                 foreach (var sub in key.GetSubKeyNames())
